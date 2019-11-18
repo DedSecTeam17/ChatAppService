@@ -1,0 +1,26 @@
+{
+  "name": "RestifyMongoNodeProject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^6.2.0",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.3",
+    "mongoose-timestamp": "^0.6.0",
+    "restify": "^7.5.0",
+    "restify-errors": "^6.1.1",
+    "restify-jwt-community": "^1.0.9"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
