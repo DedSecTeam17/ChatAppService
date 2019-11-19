@@ -1,15 +1,23 @@
 const restify = require('restify');
 const mongoose = require('mongoose');
 const restify_jwt = require('restify-jwt-community');
-
-const cors = require('cors');
+const corsMiddleware = require('restify-cors-middleware')
 
 require('dotenv').load();
 
 const server = restify.createServer();
 server.use(restify.plugins.bodyParser());
-server.use(cors);
 
+
+const cors = corsMiddleware({
+    preflightMaxAge: 5, //Optional
+    origins: ['*'],
+    allowHeaders: ['API-Token'],
+    exposeHeaders: ['API-Token-Expiry']
+})
+
+server.pre(cors.preflight)
+server.use(cors.actual)
 
 // protect all routes unless registration and login entry point
 // server.use(restify_jwt({secret: process.env.JWT_SECRET}).unless({path:['/auth']}));

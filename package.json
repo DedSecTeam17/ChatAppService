@@ -14,10 +14,12 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
+    "express": "^4.17.1",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.3",
     "mongoose-timestamp": "^0.6.0",
     "restify": "^7.5.0",
+    "restify-cors-middleware": "^1.1.1",
     "restify-errors": "^6.1.1",
     "restify-jwt-community": "^1.0.9"
   },
