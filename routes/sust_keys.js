@@ -45,8 +45,7 @@ module.exports = (server) => {
             const size = authorization_header.length;
 
             // substring JWT string from header  with space to get clean token
-            const user_token = authorization_header.substr(6, size);
-            console.log(user_token)
+            const user_token = authorization_header.substr(4, size);
             next();
 
             try {
