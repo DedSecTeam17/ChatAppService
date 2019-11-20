@@ -44,9 +44,15 @@ module.exports = (server) => {
             // signing process using user object and client secret
 
             const user_token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1y'});
-            const {iat, exp} = jwt.decode(user_token);
+            const data = jwt.decode(user_token);
 
-            sendJsonResponse(res, {iat, exp, user_token}, 200);
+            sendJsonResponse(res, {
+
+                "u_id" : data['_id'],
+                "iat" : data['iat'],
+                "exp" : data["exp"],
+                "token" : user_token
+            }, 200);
             next();
 
         } catch (e) {
