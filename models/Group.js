@@ -6,6 +6,8 @@ const timestamp = require('mongoose-timestamp');
 var CustomerSchema = new mongoose.Schema({
     group_public_key: {type: String, required: true, trim: true},
     group_name: {type: String, required: true, trim: true},
+    user_id: {type: String, required: true, trim: true},
+
 });
 
 CustomerSchema.plugin(timestamp);

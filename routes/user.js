@@ -43,7 +43,7 @@ module.exports = (server) => {
 
             // signing process using user object and client secret
 
-            const user_token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '15m'});
+            const user_token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1y'});
             const {iat, exp} = jwt.decode(user_token);
 
             sendJsonResponse(res, {iat, exp, user_token}, 200);

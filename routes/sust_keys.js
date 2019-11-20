@@ -1,5 +1,9 @@
+const jwt = require('jsonwebtoken');
+
 const errors = require('restify-errors');
 const Group = require('../models/Group');
+const User = require('../models/User');
+
 const restify_jwt = require('restify-jwt-community');
 
 module.exports = (server) => {
@@ -34,19 +38,47 @@ module.exports = (server) => {
     });
     server.post('/sust_keys',restify_jwt({secret: process.env.JWT_SECRET}), async (req, res, next) => {
 
-        const {group_name, group_public_key} = req.body;
-        const group = new Group({
-            group_name,
-            group_public_key,
-        });
 
-        try {
 
-            const newGroup = await group.save();
-            sendJsonResponse(res, newGroup, 201);
+        if (req.headers && req.headers.authorization) {
+            const authorization_header = req.headers.authorization;
+            const size = authorization_header.length;
+
+            // substring JWT string from header  with space to get clean token
+            const user_token = authorization_header.substr(6, size);
+            console.log(user_token)
             next();
-        } catch (e) {
-            return new next(new errors.InternalError(e));
+
+            try {
+
+                // decode user model using jwt verify using client secret and and clean token
+                const decoded_user = jwt.verify(user_token, process.env.JWT_SECRET);
+
+                // find user using id from decoded user
+                const user = await User.findById(decoded_user._id);
+
+
+
+                const {group_name, group_public_key} = req.body;
+                const group = new Group({
+                    "group_name" :   group_name,
+                    "group_public_key" : group_public_key,
+                    "user_id" : user['_id']
+                });
+                const newGroup = await group.save();
+                sendJsonResponse(res, newGroup, 201);
+                next();
+
+
+                next();
+
+            } catch (e) {
+                return new next(new errors.UnauthorizedError(e));
+
+            }
+        } else {
+            sendJsonResponse(res, {'message': 'Authorization header required'}, 200);
+            next();
         }
 
     });
