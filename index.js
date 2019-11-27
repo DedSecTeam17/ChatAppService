@@ -42,5 +42,7 @@ db.on('error', (error) => {
 db.on('open', () => {
     require('./routes/sust_keys')(server);
     require('./routes/user')(server);
+    require('./routes/chat')(server);
+
     console.log(`server start on port ---> ${process.env.PORT}`);
 });
