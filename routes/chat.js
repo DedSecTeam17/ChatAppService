@@ -5,17 +5,28 @@ const Chat = require('../models/Chat');
 
 const restify_jwt = require('restify-jwt-community');
 
-module.exports = (server) => {
-    server.post('/chat/get_messages', async (req, res, next) => {
+var Pusher = require('pusher');
 
-        const {sender_pk, receiver_pk} = req.body;
+var pusher = new Pusher({
+    appId: '912791',
+    key: 'c43c8e473ffba0fd0a14',
+    secret: 'd1071036bd8eaa57e1ba',
+    cluster: 'mt1',
+    encrypted: true
+});
+
+
+
+module.exports = (server) => {
+    server.post('/chat/get_messages',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
+
+        const {from: from, to} = req.body;
 
         try {
             const messages = await Chat.find({
-                'sender_group_public_key': sender_pk,
-                'receiver_group_public_key': receiver_pk
+                'from': from,
+                'to': to
             });
-
             sendJsonResponse(res, messages, 200);
             next();
 
@@ -25,18 +36,26 @@ module.exports = (server) => {
     });
 
 
-    server.post('/chat', async (req, res, next) => {
+    server.post('/chat',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
 
         try {
 
 
-            const {sender_pk, receiver_pk, encrypted_message} = req.body;
+            const {from, to, message} = req.body;
             const chat = new Chat({
-                "sender_group_public_key": sender_pk,
-                "receiver_group_public_key": receiver_pk,
-                "encrypted_message": encrypted_message
+                "from": from,
+                "to": to,
+                "message": message
             });
             const newChat = await chat.save();
+
+            pusher.trigger(`messages-${from}-${to}`, 'send_message', {
+                "message": message
+            });
+
+            console.log("Message sent successfully-------->");
+
+
             sendJsonResponse(res, newChat, 201);
             next();
 
@@ -49,6 +68,9 @@ module.exports = (server) => {
         }
 
     });
+
+
+
 
     function sendJsonResponse(res, data, status) {
         res.status(status);

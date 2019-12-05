@@ -18,6 +18,7 @@
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.3",
     "mongoose-timestamp": "^0.6.0",
+    "pusher": "^3.0.0",
     "restify": "^7.5.0",
     "restify-cors-middleware": "^1.1.1",
     "restify-errors": "^6.1.1",

@@ -40,7 +40,6 @@ db.on('error', (error) => {
 
 // if we have connection opened then require route file
 db.on('open', () => {
-    require('./routes/sust_keys')(server);
     require('./routes/user')(server);
     require('./routes/chat')(server);
 

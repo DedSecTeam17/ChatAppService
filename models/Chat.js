@@ -4,15 +4,15 @@ const timestamp = require('mongoose-timestamp');
 
 
 var ChatSchema = new mongoose.Schema({
-    sender_group_public_key: {type: String, required: true, trim: true},
-    receiver_group_public_key: {type: String, required: true, trim: true},
-    encrypted_message: {type: String, required: true, trim: true},
+    from: {type: String, required: true, trim: true},
+    to: {type: String, required: true, trim: true},
+    message: {type: String, required: true, trim: true},
 });
 
 ChatSchema.plugin(timestamp);
 
 
-const Chat = mongoose.model('Chat', ChatSchema);
+const Chat = mongoose.model('MyChat', ChatSchema);
 
 
 module.exports = Chat
