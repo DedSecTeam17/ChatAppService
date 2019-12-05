@@ -1,1 +1,1 @@
-# RestifyApplication
+# Private and group chat service 
