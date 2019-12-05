@@ -41,6 +41,7 @@ db.on('error', (error) => {
 // if we have connection opened then require route file
 db.on('open', () => {
     require('./routes/user')(server);
+    require('./routes/group')(server);
     require('./routes/chat')(server);
 
     console.log(`server start on port ---> ${process.env.PORT}`);

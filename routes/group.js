@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const errors = require('restify-errors');
-const Chat = require('../models/Chat');
+const Group = require('../models/Group');
 
 const restify_jwt = require('restify-jwt-community');
 
@@ -18,14 +18,11 @@ var pusher = new Pusher({
 
 
 module.exports = (server) => {
-    server.post('/chat/get_messages',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
-
-        const {from: from, to} = req.body;
+    server.get('/group_chat/get_messages',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
 
         try {
-            const messages = await Chat.find({
-                'from': from,
-                'to': to
+            const messages = await Group.find({
+
             });
             sendJsonResponse(res, messages, 200);
             next();
@@ -35,27 +32,26 @@ module.exports = (server) => {
     });
 
 
-    server.post('/chat',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
+    server.post('/group_chat',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
 
         try {
 
 
-            const {from, to, message} = req.body;
-            const chat = new Chat({
+            const {from,  message} = req.body;
+            const chat = new Group({
                 "from": from,
-                "to": to,
                 "message": message
             });
-            const newChat = await chat.save();
+            const newGroup = await chat.save();
 
-            pusher.trigger(`messages-${from}-${to}`, 'send_message', {
-                "message": newChat
+            pusher.trigger(`sust_group`, 'send_message', {
+                "message": newGroup
             });
 
             console.log("Message sent successfully-------->");
 
 
-            sendJsonResponse(res, newChat, 201);
+            sendJsonResponse(res, newGroup, 201);
             next();
 
 
