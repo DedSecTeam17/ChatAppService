@@ -29,7 +29,6 @@ module.exports = (server) => {
             });
             sendJsonResponse(res, messages, 200);
             next();
-
         } catch (e) {
             return next(new errors.InvalidContentError(e));
         }

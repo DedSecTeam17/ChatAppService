@@ -34,6 +34,20 @@ module.exports = (server) => {
         });
     });
 
+    server.post('/users/index',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
+
+
+        try {
+            const users = await User.find({
+            });
+            sendJsonResponse(res, users, 200);
+            next();
+        } catch (e) {
+            return next(new errors.InvalidContentError(e));
+        }
+    });
+
+
     server.post('/auth', async (req, res, next) => {
         const {email, password} = req.body;
 
