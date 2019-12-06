@@ -46,7 +46,7 @@ module.exports = (server) => {
     });
 
 
-    server.post('/users/index', restify_jwt({secret: process.env.JWT_SECRET}), async (req, res, next) => {
+    server.get('/users/index', restify_jwt({secret: process.env.JWT_SECRET}), async (req, res, next) => {
 
 
         try {
@@ -187,7 +187,7 @@ module.exports = (server) => {
                     "user": user
                 });
 
-                sendJsonResponse(res, newUser, 200);
+                sendJsonResponse(res, user, 200);
                 next();
             } catch (e) {
                 return new next(new errors.UnauthorizedError(e));
