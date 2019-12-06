@@ -50,7 +50,7 @@ module.exports = (server) => {
 
 
         try {
-            const users = await User.find({});
+            const users = await User.find({online : true});
             sendJsonResponse(res, users, 200);
             next();
         } catch (e) {
