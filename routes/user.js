@@ -48,14 +48,34 @@ module.exports = (server) => {
 
     server.get('/users/index', restify_jwt({secret: process.env.JWT_SECRET}), async (req, res, next) => {
 
+        if (req.headers && req.headers.authorization) {
+            const authorization_header = req.headers.authorization;
+            const size = authorization_header.length;
 
-        try {
-            const users = await User.find({online : true});
-            sendJsonResponse(res, users, 200);
+            // substring JWT string from header  with space to get clean token
+            const user_token = authorization_header.substr(4, size);
             next();
-        } catch (e) {
-            return next(new errors.InvalidContentError(e));
+
+            try {
+
+                // decode user model using jwt verify using client secret and and clean token
+                const decoded_user = jwt.verify(user_token, process.env.JWT_SECRET);
+
+                // find user using id from decoded user
+                const users = await User.find({online : true,_id : {$ne :decoded_user._id}});
+                sendJsonResponse(res, users, 200);
+                next();
+
+            } catch (e) {
+                return new next(new errors.UnauthorizedError(e));
+
+            }
+        } else {
+            sendJsonResponse(res, {'message': 'Authorization header required'}, 200);
+            next();
         }
+
+
     });
 
 
