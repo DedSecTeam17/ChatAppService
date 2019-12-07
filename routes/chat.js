@@ -56,6 +56,10 @@ module.exports = (server) => {
                 "message": newChat
             });
 
+            pusher.trigger(`messages-${to}-${from}`, 'send_message', {
+                "message": newChat
+            });
+
             console.log("Message sent successfully-------->");
 
 
