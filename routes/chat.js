@@ -16,16 +16,20 @@ var pusher = new Pusher({
 });
 
 
-
 module.exports = (server) => {
-    server.post('/chat/get_messages',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
+    server.post('/chat/get_messages', restify_jwt({secret: process.env.JWT_SECRET}), async (req, res, next) => {
 
         const {from: from, to} = req.body;
 
         try {
             const messages = await Chat.find({
-                'from': from,
-                'to': to
+                $or: [{
+                    'from': from,
+                    'to': to
+                }, {
+                    'from': to,
+                    'to': from
+                }]
             });
             sendJsonResponse(res, messages, 200);
             next();
@@ -35,7 +39,7 @@ module.exports = (server) => {
     });
 
 
-    server.post('/chat',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
+    server.post('/chat', restify_jwt({secret: process.env.JWT_SECRET}), async (req, res, next) => {
 
         try {
 
@@ -67,8 +71,6 @@ module.exports = (server) => {
         }
 
     });
-
-
 
 
     function sendJsonResponse(res, data, status) {
