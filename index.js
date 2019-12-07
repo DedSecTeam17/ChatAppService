@@ -12,7 +12,7 @@ server.use(restify.plugins.bodyParser());
 const cors = corsMiddleware({
     preflightMaxAge: 5, //Optional
     origins: ['*'],
-    allowHeaders: ['API-Token' , 'Authorization'],
+    allowHeaders: ['API-Token' , 'Authorization','Access-Control-Allow-Origin'],
     exposeHeaders: ['API-Token-Expiry'],
 
 })
