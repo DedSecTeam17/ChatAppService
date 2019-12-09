@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 
 const errors = require('restify-errors');
 const Group = require('../models/Group');
+const User = require('../models/User');
+const  mongoose = require('mongoose');
 
 const restify_jwt = require('restify-jwt-community');
 
@@ -18,14 +20,41 @@ var pusher = new Pusher({
 
 
 module.exports = (server) => {
-    server.get('/group_chat/get_messages',restify_jwt({secret: process.env.JWT_SECRET}),  async (req, res, next) => {
+    server.get('/group_chat/get_messages', async (req, res, next) => {
 
         try {
+            var  response = [];
+
             const messages = await Group.find({
 
             });
-            sendJsonResponse(res, messages, 200);
-            next();
+
+
+            let  noOfMessages = messages.length;
+            let count = 0;
+            messages.map( async (message)=> {
+                console.log(message.from);
+                var  user =await User.find({_id: mongoose.Types.ObjectId(message.from) });
+
+                response.push({
+                    "user"  : user[0] ,
+                    "message" : message
+                });
+                count+=1;
+
+                if (noOfMessages===count){
+                    sendJsonResponse(res, response, 200);
+                    next();
+                }
+
+
+
+            });
+
+
+
+
+
         } catch (e) {
             return next(new errors.InvalidContentError(e));
         }
