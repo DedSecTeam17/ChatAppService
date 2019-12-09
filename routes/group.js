@@ -72,9 +72,11 @@ module.exports = (server) => {
                 "message": message
             });
             const newGroup = await chat.save();
+            var  user =await User.find({_id: mongoose.Types.ObjectId(from) });
 
             pusher.trigger(`sust_group`, 'send_message', {
-                "message": newGroup
+                "message": newGroup,
+                "user" : user
             });
 
             console.log("Message sent successfully-------->");
