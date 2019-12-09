@@ -76,7 +76,7 @@ module.exports = (server) => {
 
             pusher.trigger(`sust_group`, 'send_message', {
                 "message": newGroup,
-                "user" : user
+                "user" : user[0]
             });
 
             console.log("Message sent successfully-------->");
