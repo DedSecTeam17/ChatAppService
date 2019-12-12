@@ -1,11 +1,14 @@
+
 const mongoose = require('mongoose');
 
 const timestamp = require('mongoose-timestamp');
 
 
 var ChatSchema = new mongoose.Schema({
-    from: {type: String, required: true, trim: true},
+    from: {type:  mongoose.Schema.Types.ObjectId , required: true, ref : 'User'},
     message: {type: String, required: true, trim: true},
+    name: {type: String, required: true, trim: true},
+
 });
 
 ChatSchema.plugin(timestamp);

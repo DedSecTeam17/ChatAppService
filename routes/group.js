@@ -23,34 +23,13 @@ module.exports = (server) => {
     server.get('/group_chat/get_messages', async (req, res, next) => {
 
         try {
-            var  response = [];
 
             const messages = await Group.find({
 
             });
 
-
-            let  noOfMessages = messages.length;
-            let count = 0;
-            messages.map( async (message)=> {
-                console.log(message.from);
-                var  user =await User.find({_id: mongoose.Types.ObjectId(message.from) });
-
-                response.push({
-                    "user"  : user[0] ,
-                    "message" : message
-                });
-                count+=1;
-
-                if (noOfMessages===count){
-                    sendJsonResponse(res, response, 200);
-                    next();
-                }
-
-
-
-            });
-
+            sendJsonResponse(res, messages, 200);
+            next();
 
 
 
@@ -66,17 +45,16 @@ module.exports = (server) => {
         try {
 
 
-            const {from,  message} = req.body;
+            const {from,  message,name} = req.body;
             const chat = new Group({
                 "from": from,
-                "message": message
+                "message": message,
+                "name" : name
             });
             const newGroup = await chat.save();
-            var  user =await User.find({_id: mongoose.Types.ObjectId(from) });
 
             pusher.trigger(`sust_group`, 'send_message', {
-                "message": newGroup,
-                "user" : user[0]
+                "message" : newGroup
             });
 
             console.log("Message sent successfully-------->");
